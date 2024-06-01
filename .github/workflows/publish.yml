@@ -22,7 +22,6 @@ jobs:
 
     - name: Check
       run: |
-        ls .
         ls DDSU666
 
     # - name: Create Release
