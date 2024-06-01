@@ -22,7 +22,7 @@ jobs:
 
     - name: Check
       run: |
-        ls DDSU666
+        ls DDSU666/DDSU666
 
     # - name: Create Release
     #   id: create_release
