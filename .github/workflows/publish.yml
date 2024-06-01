@@ -15,11 +15,11 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore -c Release
+      run: dotnet publish DDSU666/DDSU666/DDSU666.csproj
 
     - name: Check
       run: |
-        ls DDSU666/DDSU666/bin
+        ls DDSU666/DDSU666/bin/Release/net8.0/publish
 
     # - name: Create Release
     #   id: create_release
