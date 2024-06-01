@@ -16,10 +16,10 @@ jobs:
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore -c Release
 
     - name: Check
-      run: ls .
+      run: ls DDSU666\bin
 
     # - name: Create Release
     #   id: create_release
