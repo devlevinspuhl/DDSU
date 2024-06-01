@@ -4,7 +4,9 @@ on:
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        configuration: [Release]
     runs-on: ubuntu-latest
 
     steps:
@@ -18,33 +20,37 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
 
-    - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1.1.4
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: '${{ vars.PUBLISH_TAG_NAME }}'
-        release_name: '${{ vars.PUBLISH_RELEASE_NAME }}/${{ vars.PUBLISH_TAG_NAME }}'
-        body: ${{ vars.PUBLISH_CHANGES_BODY }}
-        draft: false
-        prerelease: false     
+    - name: Check
+      run: |
+        ls DDSU666/DDSU666/bin
 
-    - name: Archive Database Release
-      uses: thedoctor0/zip-release@0.7.6
-      with:
-        type: 'zip'
-        filename: DDSU666
-        directory: Fintrax.MMS.Database/bin/Output
-        exclusions: '*.git* /*node_modules/* .editorconfig'     
+    # - name: Create Release
+    #   id: create_release
+    #   uses: actions/create-release@v1.1.4
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     tag_name: '${{ vars.PUBLISH_TAG_NAME }}'
+    #     release_name: '${{ vars.PUBLISH_RELEASE_NAME }}/${{ vars.PUBLISH_TAG_NAME }}'
+    #     body: ${{ vars.PUBLISH_CHANGES_BODY }}
+    #     draft: false
+    #     prerelease: false     
 
-    - name: Upload Release Asset
-      id: upload-release-asset1
-      uses: actions/upload-release-asset@v1.0.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: './Fintrax.MMS.Database/bin/Output/Database.zip'
-        asset_name: 'Database.zip'
-        asset_content_type: application/zip   
+    # - name: Archive Database Release
+    #   uses: thedoctor0/zip-release@0.7.6
+    #   with:
+    #     type: 'zip'
+    #     filename: DDSU666
+    #     directory: Fintrax.MMS.Database/bin/Output
+    #     exclusions: '*.git* /*node_modules/* .editorconfig'     
+
+    # - name: Upload Release Asset
+    #   id: upload-release-asset1
+    #   uses: actions/upload-release-asset@v1.0.2
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    #   with:
+    #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+    #     asset_path: './Fintrax.MMS.Database/bin/Output/Database.zip'
+    #     asset_name: 'Database.zip'
+    #     asset_content_type: application/zip   
