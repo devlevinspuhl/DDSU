@@ -4,7 +4,9 @@ on:
 
 jobs:
   build:
-
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
     runs-on: ubuntu-latest
 
     steps:
