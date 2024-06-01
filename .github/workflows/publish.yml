@@ -21,7 +21,9 @@ jobs:
       run: dotnet build --no-restore
 
     - name: Check
-      run: ls DDSU666\bin
+      run: |
+        ls .
+        ls DDSU666
 
     # - name: Create Release
     #   id: create_release
