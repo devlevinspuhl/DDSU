@@ -47,22 +47,22 @@
             _exceptionCode = exceptionCode;
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="InvalidModbusRequestException" /> class with serialized data.
-        /// </summary>
-        /// <param name="info">The object that holds the serialized object data.</param>
-        /// <param name="context">The contextual information about the source or destination.</param>
-        protected InvalidModbusRequestException(SerializationInfo info, StreamingContext context)
-            : base(info, context) { }
+        ///// <summary>
+        /////     Initializes a new instance of the <see cref="InvalidModbusRequestException" /> class with serialized data.
+        ///// </summary>
+        ///// <param name="info">The object that holds the serialized object data.</param>
+        ///// <param name="context">The contextual information about the source or destination.</param>
+        //protected InvalidModbusRequestException(SerializationInfo info, StreamingContext context)
+        //    : base(info, context) { }
 
-        /// <summary>Sets the <see cref="SerializationInfo" /> object with the Modbus exception code and additional exception information.</summary>
-        /// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-            info.AddValue("ExceptionCode", this._exceptionCode, typeof(byte));
-        }
+        ///// <summary>Sets the <see cref="SerializationInfo" /> object with the Modbus exception code and additional exception information.</summary>
+        ///// <param name="info">The <see cref="SerializationInfo" /> that holds the serialized object data about the exception being thrown.</param>
+        ///// <param name="context">The <see cref="StreamingContext" /> that contains contextual information about the source or destination.</param>
+        //public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        //{
+        //    base.GetObjectData(info, context);
+        //    info.AddValue("ExceptionCode", this._exceptionCode, typeof(byte));
+        //}
 
         /// <summary>
         ///     Gets the Modbus exception code to provide to the slave.
