@@ -6,7 +6,7 @@ jobs:
   build:
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: [Release]
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
 
     - name: Check
       run: |
-        ls DDSU666/DDSU666
+        ls DDSU666/DDSU666/bin/Release
 
     # - name: Create Release
     #   id: create_release
