@@ -1,193 +1,50 @@
 name: Publish
-env:
-  NUGET_VERSION: 6.x
-  NODE_VERSION: 20.x
-  SOLUTION_NAME: '.\MMR.sln'
-  WEB_PROJECT: './Fintrax.BackOffice.MMS.Web'
-  # BUILD_CONFIGURATION: 'Release'
-  VsPublishProfile: 'FolderProfile'
- 
-on:  
+on:
   workflow_dispatch:
-    inputs:
-      select_env:
-        description: 'Environment'
-        required: true
-        default: 'dev'      
-        type: choice
-        options:
-          - dev
-          - qa
-          - uat
 
-jobs:  
-  Build:    
-    name: Prepare to build
-    runs-on: windows-latest
+jobs:
+  build:
 
-    strategy:
-      max-parallel: 1
-      fail-fast: true
-    environment: ${{ inputs.select_env }}      
+    runs-on: ubuntu-latest
 
     steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore
 
-      - uses: actions/checkout@v4.1.6   
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.1.4
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: '${{ vars.PUBLISH_TAG_NAME }}'
+        release_name: '${{ vars.PUBLISH_RELEASE_NAME }}/${{ vars.PUBLISH_TAG_NAME }}'
+        body: ${{ vars.PUBLISH_CHANGES_BODY }}
+        draft: false
+        prerelease: false     
 
-      - name: Setup MSBuild
-        uses: microsoft/setup-msbuild@v2
-        
-      - uses: nuget/setup-nuget@v2.0.0
-        with:
-          nuget-api-key: ${{ secrets.NuGetAPIKey }}
-          nuget-version: ${{ env.NUGET_VERSION }}
+    - name: Archive Database Release
+      uses: thedoctor0/zip-release@0.7.6
+      with:
+        type: 'zip'
+        filename: DDSU666
+        directory: Fintrax.MMS.Database/bin/Output
+        exclusions: '*.git* /*node_modules/* .editorconfig'     
 
-      - run: nuget restore "${{ env.SOLUTION_NAME }}"
-
-      # - name: Setup VSTest
-      #   uses: darenm/Setup-VSTest@v1.3
-
-      - name: Setup .Net
-        uses: actions/setup-dotnet@v4.0.0
-        with:
-          dotnet-version: 8.x
-          dotnet-quality: 'ga'
-
-      - name: Use Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v4.0.2
-        with:
-          node-version: ${{ env.NODE_VERSION }}          
-
-      - name: Cache npm dependencies
-        uses: actions/cache@v4.0.2
-        with:
-          path: '~/.npm'
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-          
-      - name: yarn install
-        working-directory: '${{ env.WEB_PROJECT }}'
-        run: |
-          yarn install
-      - name: Build Solution
-        run: |
-         msbuild "${{ env.SOLUTION_NAME }}" /p:configuration="${{ inputs.select_env }}" /p:DeployOnBuild=true /p:PublishProfile=${{ env.VsPublishProfile }} /p:SkipInvalidConfigurations=true          
-     
-      - name: Test 
-        run: dotnet test -c "${{ inputs.select_env }}" .\Mmr.UnitTests\Mmr.UnitTests.csproj  --no-build  --collect:"XPlat Code Coverage" --results-directory coveragereport 
-        continue-on-error: true  
-
-      - name: ReportGenerator
-        uses: danielpalme/ReportGenerator-GitHub-Action@5.3.4
-        with:
-          reports: coveragereport/*/coverage.cobertura.xml
-          targetdir: coveragereport_target
-          reporttypes: MarkdownSummaryGithub
-      
-      - name: Write to Job Summary
-        run: |
-          cat ./coveragereport_target\SummaryGithub.md >> $env:GITHUB_STEP_SUMMARY        
-
-      #   TODO use microsoft/variable-substitution@v1 and/or XDT
-      # - name: XDT Installion
-      #   run: dotnet tool install --global dotnet-xdt --version 2.2.1
-
-      # - name: XDT Web site
-      #   working-directory: Fintrax.BackOffice.MMS.Web/webapp.publish/Config
-      #   run: dotnet xdt --source appSettings.config --transform 'appSettings.${{ inputs.select_env }}.config' --output appSettings.config    
-
-
-      # - name: Check config file
-      #   working-directory: Fintrax.BackOffice.MMS.Web/webapp.publish/Config
-      #   run: |
-      #     cat appSettings.config
-      #     cat appSettings.qa.config
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1.1.4
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-        with:
-          tag_name: '${{ vars.PUBLISH_TAG_NAME }}'
-          release_name: '${{ vars.PUBLISH_RELEASE_NAME }}/${{ vars.PUBLISH_TAG_NAME }}'
-          body: ${{ vars.PUBLISH_CHANGES_BODY }}
-          draft: false
-          prerelease: false     
-
-      - name: Archive Database Release
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: Database
-          directory: Fintrax.MMS.Database/bin/Output
-          exclusions: '*.git* /*node_modules/* .editorconfig'     
-
-      - name: Upload Release Asset
-        id: upload-release-asset1
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: './Fintrax.MMS.Database/bin/Output/Database.zip'
-          asset_name: 'Database.zip'
-          asset_content_type: application/zip   
-
-      - name: Archive Web site Release
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: Website
-          directory: Fintrax.BackOffice.MMS.Web/webapp.publish
-          exclusions: '*.git* /*node_modules/* .editorconfig'     
-
-      - name: Upload Release Asset
-        id: upload-release-asset2
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: './Fintrax.BackOffice.MMS.Web/webapp.publish/Website.zip'
-          asset_name: 'Website.zip'
-          asset_content_type: application/zip             
-
-      - name: Archive Web API Release
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: Webapi
-          directory: Fintrax.BackOffice.MMS.Web.Api/webapi.publish
-          exclusions: '*.git* /*node_modules/* .editorconfig'     
-
-      - name: Upload Release Asset
-        id: upload-release-asset3
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: './Fintrax.BackOffice.MMS.Web.Api/webapi.publish/Webapi.zip'
-          asset_name: 'Webapi.zip'
-          asset_content_type: application/zip      
-
-      - name: Archive Service Release
-        uses: thedoctor0/zip-release@0.7.6
-        with:
-          type: 'zip'
-          filename: Service
-          directory: 'Fintrax.MMS.Service/bin/${{ inputs.select_env }}'
-          exclusions: '*.git* /*node_modules/* .editorconfig'     
-
-      - name: Upload Release Asset
-        id: upload-release-asset4
-        uses: actions/upload-release-asset@v1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: 'Fintrax.MMS.Service/bin/${{ inputs.select_env }}/Service.zip'
-          asset_name: 'Service.zip'
-          asset_content_type: application/zip              
+    - name: Upload Release Asset
+      id: upload-release-asset1
+      uses: actions/upload-release-asset@v1.0.2
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: './Fintrax.MMS.Database/bin/Output/Database.zip'
+        asset_name: 'Database.zip'
+        asset_content_type: application/zip   
