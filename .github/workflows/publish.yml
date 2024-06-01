@@ -1,4 +1,4 @@
-name: MMR Publish
+name: Publish
 env:
   NUGET_VERSION: 6.x
   NODE_VERSION: 20.x
