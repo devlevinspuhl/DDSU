@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModbusDDSU666", "ModbusDDSU666\ModbusDDSU666.csproj", "{3EF99788-CCF8-4BAA-B683-C96E41C061FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDSU666", "DDSU666\DDSU666.csproj", "{CE7D0F41-641B-47DC-ABBD-64E261FF1F92}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NModbus4Core", "NModbus4Core\NModbus4Core.csproj", "{1D0E45F0-064C-413F-BE58-D7938E7F8C53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,12 +14,18 @@ Global
 		SignedRelease|Any CPU = SignedRelease|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3EF99788-CCF8-4BAA-B683-C96E41C061FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3EF99788-CCF8-4BAA-B683-C96E41C061FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3EF99788-CCF8-4BAA-B683-C96E41C061FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3EF99788-CCF8-4BAA-B683-C96E41C061FD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3EF99788-CCF8-4BAA-B683-C96E41C061FD}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{3EF99788-CCF8-4BAA-B683-C96E41C061FD}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
+		{CE7D0F41-641B-47DC-ABBD-64E261FF1F92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE7D0F41-641B-47DC-ABBD-64E261FF1F92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE7D0F41-641B-47DC-ABBD-64E261FF1F92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE7D0F41-641B-47DC-ABBD-64E261FF1F92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE7D0F41-641B-47DC-ABBD-64E261FF1F92}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{CE7D0F41-641B-47DC-ABBD-64E261FF1F92}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
+		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
