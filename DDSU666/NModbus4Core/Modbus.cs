@@ -46,7 +46,7 @@ namespace Modbus
         public const ushort CoilOff = 0x0000;
 
         // IP slaves should be addressed by IP
-        public const byte DefaultIpSlaveUnitId = 0;
+        public const byte DefaultIpSlaveUnitId = 1;
 
         // An existing connection was forcibly closed by the remote host
         public const int ConnectionResetByPeer = 10054;

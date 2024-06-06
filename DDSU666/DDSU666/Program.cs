@@ -2,12 +2,12 @@
 using Modbus.Device;
 using System.IO.Ports;
 
-byte slaveId = 12;
+byte slaveId = 1;
 using (SerialPort serialPort = new SerialPort("COM8", 9600, Parity.None, 8, StopBits.One))
 {
     serialPort.Open();
     IModbusMaster masterRTU = ModbusSerialMaster.CreateRtu(serialPort);
-    var ushortArray = masterRTU.ReadHoldingRegisters(slaveId, 8192, 16);
+    var ushortArray = masterRTU.ReadHoldingRegisters(slaveId, 32016, 1);
 
     var len = ushortArray.Length;
 

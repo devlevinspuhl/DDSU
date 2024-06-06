@@ -7,6 +7,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDSU666", "DDSU666\DDSU666\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NModbus4Core", "DDSU666\NModbus4Core\NModbus4Core.csproj", "{1D0E45F0-064C-413F-BE58-D7938E7F8C53}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sun2000TCP", "Sun2000TCP\Sun2000TCP.csproj", "{4A50BE2F-56EB-4738-8BEC-6BC363494393}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleWifiCore", "SimpleWifiCore\SimpleWifiCore.csproj", "{C93C0541-028C-4C2C-965C-99366373F06F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sun2000RS485", "Sun2000RS485\Sun2000RS485.csproj", "{C62EB69F-0038-4798-A30D-E16CB84690FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +32,24 @@ Global
 		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{1D0E45F0-064C-413F-BE58-D7938E7F8C53}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
+		{4A50BE2F-56EB-4738-8BEC-6BC363494393}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A50BE2F-56EB-4738-8BEC-6BC363494393}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A50BE2F-56EB-4738-8BEC-6BC363494393}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A50BE2F-56EB-4738-8BEC-6BC363494393}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A50BE2F-56EB-4738-8BEC-6BC363494393}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{4A50BE2F-56EB-4738-8BEC-6BC363494393}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
+		{C93C0541-028C-4C2C-965C-99366373F06F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C93C0541-028C-4C2C-965C-99366373F06F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C93C0541-028C-4C2C-965C-99366373F06F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C93C0541-028C-4C2C-965C-99366373F06F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C93C0541-028C-4C2C-965C-99366373F06F}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{C93C0541-028C-4C2C-965C-99366373F06F}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
+		{C62EB69F-0038-4798-A30D-E16CB84690FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C62EB69F-0038-4798-A30D-E16CB84690FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C62EB69F-0038-4798-A30D-E16CB84690FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C62EB69F-0038-4798-A30D-E16CB84690FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C62EB69F-0038-4798-A30D-E16CB84690FC}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{C62EB69F-0038-4798-A30D-E16CB84690FC}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
