@@ -122,7 +122,8 @@ namespace Modbus.IO
             byte[] frameStart = Read(ResponseFrameStartLength);
             byte[] frameEnd = Read(ResponseBytesToRead(frameStart));
             byte[] frame = Enumerable.Concat(frameStart, frameEnd).ToArray();
-            Debug.WriteLine("RX: {0}", string.Join(", ", frame));
+            Console.WriteLine("RX: {0}", string.Join(", ", frame));
+            Console.WriteLine(Convert.ToHexString(frame));
 
             return CreateResponse<T>(frame);
         }

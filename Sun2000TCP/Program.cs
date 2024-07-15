@@ -9,20 +9,20 @@ using System.Net;
 using System.Net.Sockets;
 
 
-//var wifi = new Wifi();
+var wifi = new Wifi();
 
-//wifi.Disconnect();
+wifi.Disconnect();
 
-//var accessPoints = wifi.GetAccessPoints();
+var accessPoints = wifi.GetAccessPoints();
 
-//var accessPoint = accessPoints.FirstOrDefault(x => x.Name == "SUN2000-HV22A0643005");
-//var connected = false;
-//if (accessPoint != null && !accessPoint.IsConnected)
-//{
-//    connected = accessPoint.Connect("Changeme","Installer");
+var accessPoint = accessPoints.FirstOrDefault(x => x.Name == "SUN2000-HV22A0643005");
+var connected = false;
+if (accessPoint != null && !accessPoint.IsConnected)
+{
+    connected = accessPoint.Connect("Changeme", "Installer");
 
 
-//}
+}
 //if (connected)
 //{
 //    wifi.Disconnect();
@@ -35,9 +35,8 @@ using System.Net.Sockets;
 
 byte slaveAddress = 0 ;
 int port = 6607;
-//int port = 502;
-//IPAddress ipaddress = IPAddress.Parse("192.168.200.1");
-IPAddress ipaddress = IPAddress.Parse("192.168.1.27");
+
+IPAddress ipaddress = IPAddress.Parse("192.168.200.1");
 TcpClient client = new TcpClient();
 client.ReceiveTimeout = 2000;
 client.SendTimeout = 2000;
@@ -55,7 +54,7 @@ while(timeout)
 try
 {
         Console.WriteLine($"ddr: {addr}");
-    var ushortArray = masterRTU.ReadHoldingRegisters(1, 32080, 2);
+    var ushortArray = masterRTU.ReadHoldingRegisters(1, 30000, 36);
         timeout = false;
 }
 catch (Exception ex)

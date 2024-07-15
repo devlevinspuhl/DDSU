@@ -1,27 +1,41 @@
-﻿using DDSU666.extension;
-using Modbus.Device;
+﻿using Modbus.Device;
+using ModBusUtil;
+using ModBusUtil.extension;
 using System.IO.Ports;
+using System.Net.Sockets;
 
-byte slaveId = 12;
-using (SerialPort serialPort = new SerialPort("COM10", 9600, Parity.None, 8, StopBits.One))
+//using (SerialPort serialPort = new SerialPort("COM9", 9600, Parity.None, 8, StopBits.One))
+String server = "192.168.1.30";
+Int32 port = 8080;
+// Prefer a using declaration to ensure the instance is Disposed later.
+
+while (true)
 {
-    serialPort.Open();
-    IModbusMaster masterRTU = ModbusSerialMaster.CreateRtu(serialPort);
-    var ushortArray = masterRTU.ReadHoldingRegisters(slaveId, 8192, 24);
-
-    var len = ushortArray.Length;
-
-
-    for (int i = 0; i < ushortArray.Length; i += 2)
+    try
     {
-        var pair = new ushort[]
+        using (TcpClient client = new TcpClient(server, port))
         {
-                    ushortArray[i],
-                    ushortArray[i+1],
-        };
-        var value = pair.ModbusWordArrayToFloat();
-        Console.WriteLine($"addr: {8192 + i} content: {value}");
+            //serialPort.Open();
+            //IModbusMaster masterRTU = ModbusSerialMaster.CreateRtu(serialPort);
+            IModbusMaster masterRTU = ModbusSerialMaster.CreateRtu(client);
+
+            //ModBusUtil.ShowRegistersScan(masterRTU, 12, 65280);
+            //ModBusUtil.ShowRegistersSTR(masterRTU, 12, 0, 16);
+            var resp = MbUtil.ShowRegistersU16(masterRTU, 12, 16384, 32);
+            //var resp = MbUtil.ShowRegistersU16(masterRTU);
+            //MbUtil.ShowRegistersU16(masterRTU, 12, 12288, 2);
+            //MbUtil.ShowRegistersU16(masterRTU, 12, 12298, 2);
+            Console.WriteLine(resp.Length);
+            Thread.Sleep(5000);
+        }
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
     }
 }
+
+
+
 
 

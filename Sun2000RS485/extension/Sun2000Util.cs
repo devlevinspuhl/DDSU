@@ -7,19 +7,18 @@ namespace Sun2000RS485.extension
 {
     public class Sun2000Util
     {
-        const string formatter = "{0,5}{1,17}{2,8}";
-        public static void ShowRegistersBytes(IModbusMaster masterRTU, byte slaveId, ushort address, ushort numberOfPoints)
+        public static void ShowRegistersSTR(IModbusMaster masterRTU, byte slaveId, ushort address, ushort numberOfPoints)
         {
-            numberOfPoints /=2;
-            
-            var ushortArray = masterRTU.ReadHoldingRegisters(slaveId, address, numberOfPoints);
+            ushort points = (ushort)(numberOfPoints / 2);
+            points += (ushort)(numberOfPoints % 2);
+
+
+            var ushortArray = masterRTU.ReadHoldingRegisters(slaveId, address, points);
             var bytes = Ushort2Bytes(ushortArray);
-            for (int index = 0; index < bytes.Length; index=index+2)
+            for (int index = 0; index < numberOfPoints; index++)
             {
-                var high = bytes[index + 1];
-                var low = bytes[index];
                 Console.WriteLine(
-                    $"addr: {address+index} content: {low}-{high} -> {Convert.ToChar(low)} {Convert.ToChar(high)}");
+                    $"addr: {address + index} content: {bytes[index]} -> {Convert.ToChar(bytes[index])}");
             }
         }
         public static byte[] Ushort2Bytes(ushort[] ushortArray)
@@ -35,6 +34,16 @@ namespace Sun2000RS485.extension
             }
 
             return bytes;
+        }
+
+        internal static void ShowRegistersU16(IModbusMaster masterRTU, byte slaveId, ushort address, ushort numberOfPoints)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal static void ShowRegistersU32(IModbusMaster masterRTU, int v1, int v2, int v3)
+        {
+            throw new NotImplementedException();
         }
     }
 }

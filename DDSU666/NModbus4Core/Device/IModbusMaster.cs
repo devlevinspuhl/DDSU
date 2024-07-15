@@ -59,6 +59,11 @@ namespace Modbus.Device
         /// <param name="numberOfPoints">Number of holding registers to read.</param>
         /// <returns>Holding registers status</returns>
         ushort[] ReadHoldingRegisters(byte slaveAddress, ushort startAddress, ushort numberOfPoints);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        ushort[] ReadHoldingRegisters();
 
         /// <summary>
         ///    Asynchronously reads contiguous block of holding registers.

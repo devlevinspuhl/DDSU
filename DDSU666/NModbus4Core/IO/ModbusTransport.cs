@@ -107,7 +107,86 @@ namespace Modbus.IO
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+        internal virtual T UnicastNoMessage<T>() where T : IModbusMessage, new()
+        {
+            IModbusMessage response = null;
+            int attempt = 1;
+            bool success = false;
 
+            do
+            {
+                try
+                {
+                    lock (_syncLock)
+                    {
+
+                        bool readAgain;
+                        do
+                        {
+                            readAgain = false;
+                            response = ReadResponse<T>();
+
+                            var exceptionResponse = response as SlaveExceptionResponse;
+                            if (exceptionResponse != null)
+                            {
+                                // if SlaveExceptionCode == ACKNOWLEDGE we retry reading the response without resubmitting request
+                                readAgain = exceptionResponse.SlaveExceptionCode == Modbus.Acknowledge;
+                                if (readAgain)
+                                {
+                                    Debug.WriteLine(
+                                        "Received ACKNOWLEDGE slave exception response, waiting {0} milliseconds and retrying to read response.",
+                                        _waitToRetryMilliseconds);
+                                    Sleep(WaitToRetryMilliseconds);
+                                }
+                                else
+                                {
+                                    throw new SlaveException(exceptionResponse);
+                                }
+                            }
+                            else if (ShouldRetryResponse(response))
+                            {
+                                readAgain = true;
+                            }
+                        } while (readAgain);
+                    }
+
+                    //ValidateResponse(message, response);
+                    success = true;
+                }
+                catch (SlaveException se)
+                {
+                    if (se.SlaveExceptionCode != Modbus.SlaveDeviceBusy)
+                        throw;
+
+                    if (SlaveBusyUsesRetryCount && attempt++ > _retries)
+                        throw;
+
+                    Debug.WriteLine(
+                        "Received SLAVE_DEVICE_BUSY exception response, waiting {0} milliseconds and resubmitting request.",
+                        _waitToRetryMilliseconds);
+                    Sleep(WaitToRetryMilliseconds);
+                }
+                catch (Exception e)
+                {
+                    if (e is FormatException ||
+                        e is NotImplementedException ||
+                        e is TimeoutException ||
+                        e is IOException)
+                    {
+                        Debug.WriteLine("{0}, {1} retries remaining - {2}", e.GetType().Name, _retries - attempt + 1, e);
+
+                        if (attempt++ > _retries)
+                            throw;
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            } while (!success);
+
+            return (T)response;
+        }
         internal virtual T UnicastMessage<T>(IModbusMessage message) where T : IModbusMessage, new()
         {
             IModbusMessage response = null;
@@ -236,6 +315,11 @@ namespace Modbus.IO
             if (request.FunctionCode != response.FunctionCode) { return false; }
             if (request.SlaveAddress != response.SlaveAddress) { return false; }
             return OnShouldRetryResponse(request, response); ;
+        }
+        internal bool ShouldRetryResponse(IModbusMessage response)
+        {
+            // These checks are enforced in ValidateRequest, we don't want to retry for these
+            return false;
         }
 
         /// <summary>

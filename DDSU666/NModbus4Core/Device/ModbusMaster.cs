@@ -98,6 +98,14 @@ namespace Modbus.Device
                 numberOfPoints);
             return PerformReadRegisters(request);
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public ushort[] ReadHoldingRegisters()
+        {
+            return PerformReadRegisters();
+        }
 
         /// <summary>
         ///    Asynchronously reads contiguous block of holding registers.
@@ -374,6 +382,12 @@ namespace Modbus.Device
                 Transport.UnicastMessage<ReadHoldingInputRegistersResponse>(request);
 
             return response.Data.Take(request.NumberOfPoints).ToArray();
+        }
+        private ushort[] PerformReadRegisters()
+        {
+            ReadHoldingInputRegistersResponse response =
+                Transport.UnicastNoMessage<ReadHoldingInputRegistersResponse>();
+            return response.Data.ToArray();
         }
 
         private Task<ushort[]> PerformReadRegistersAsync(ReadHoldingInputRegistersRequest request)

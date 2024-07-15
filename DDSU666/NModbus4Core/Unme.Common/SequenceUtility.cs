@@ -16,8 +16,8 @@
                 throw new ArgumentOutOfRangeException("startIndex");
             if (size < 0 || startIndex + size > num)
                 throw new ArgumentOutOfRangeException("size");
-
-            return enumerable.Skip(startIndex).Take(size);
+            var resp = enumerable.Skip(startIndex).Take(size);
+            return resp;
         }
     }
 }
