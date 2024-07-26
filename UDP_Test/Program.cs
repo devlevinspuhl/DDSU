@@ -8,6 +8,7 @@ using Modbus.Utility;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Data;
 using System.Buffers.Binary;
+using System.Xml.Linq;
 
 namespace UDP_Test
 {
@@ -21,54 +22,46 @@ namespace UDP_Test
         {
             try
             {
-                var server = "192.168.1.30";
-                Int32 port = 8080;
-                using TcpClient client = new TcpClient(server, port);
-                NetworkStream stream = client.GetStream();
-                while (true)
-                {
-                    var data = new Byte[82];
-                    var responseData = string.Empty;
-                    Int32 bytes = stream.Read(data, 0, data.Length - 0);
-                    
-                    var n1 = BitConverter.ToUInt16(data, 4);
-                    if (n1 != 0x2000) continue;
-                    Console.Clear();
-                    Console.WriteLine(Convert.ToHexString(data));
-                    var endian = new byte[69];
-                    var bigendian = new byte[69];
-                    Array.Copy(data, 11, endian, 0, 69);
-                    for (int i = 0; i < endian.Length-1; i += 2)
-                    {
-                        bigendian[i + 1] = endian[i];
-                        bigendian[i] = endian[i+1];
+                var server = "192.168.1.31";
+                Int32 port = 1337;
+                using UdpClient client = new UdpClient(port);
+                var impSetpoint = 150;
+                byte high = (byte)(impSetpoint / 256);
+                byte low = (byte)(impSetpoint - high * 256);
+                var imp = new byte[] { 0xF2, 0x00, 0x00, 0x01, low, high, 0x00 };
+                var cks = Checksum(imp);
+                var cmd = new byte[imp.Length+1];
+                Array.Copy(imp,cmd,imp.Length);
+                cmd[cmd.Length-1] = cks;
+                //var a = 0xF2 ^ 0x01 ^ 0x00 ^ 0x0A ^ 0x55; 
+                var a = 242 ^ 1 ^ 0x8A ^ 0x02 ^ 85;
+                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(server), port); // endpoint where server is listening
+                client.Send(cmd, 8, ep);
 
-                    }
-                    Console.WriteLine(Convert.ToHexString(bigendian));
-                    for (int i = 0; i < bigendian.Length - 4; i += 4)
-                    {
-
-
-                        var conv = MbUtil.UshortToFloat(
-
-                            BitConverter.ToUInt16(bigendian, i),
-                            BitConverter.ToUInt16(bigendian, i + 2)
-                            );
-                        Console.WriteLine(conv);
-                    }
-                }
+                var data = client.Receive(ref ep);
+                Console.WriteLine(Convert.ToHexString(data));
+                Console.WriteLine(Convert.ToHexString(data, 7, 2));
+                Console.WriteLine(Convert.ToHexString(data, 6, 1));
+                float setpoint = (data[4] + data[5] * 256) / 10f;
+                float currenttemp = (data[7] + data[8] * 256) / 10f;
+                Console.WriteLine(setpoint);
+                Console.WriteLine(currenttemp);
+                Thread.Sleep(10000);
+                Console.Clear();
             }
-            catch (ArgumentNullException e)
+            catch (Exception ex)
             {
-                Console.WriteLine("ArgumentNullException: {0}", e);
+                ex = ex;
             }
-            catch (SocketException e)
+        }
+        private static byte Checksum(byte[] data)
+        {
+            int checksum = 0;
+            for (int i = 0; i < data.Length; i++)
             {
-                Console.WriteLine("SocketException: {0}", e);
+                checksum ^= data[i];
             }
-
-            Console.WriteLine("\n Press Enter to continue...");
-            Console.Read();
+            return (byte)(checksum ^ 0x55);
         }
     }
 }

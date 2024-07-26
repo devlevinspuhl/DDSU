@@ -17,13 +17,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDSUForm", "DDSUForm\DDSUFo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModBusUtil", "ModBusUtil\ModBusUtil.csproj", "{91D28A5F-B3AF-43A3-B04E-2EA15B9DCDE2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinRegistry", "WinRegistry\WinRegistry.csproj", "{485288F5-93E7-49F2-AAD2-390E0D3C1E22}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UDP_Test", "UDP_Test\UDP_Test.csproj", "{79529396-F819-4845-B4A0-826B43473649}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SerialSend", "SerialSend\SerialSend.csproj", "{F8EF7FF9-828B-4B22-A476-3873B14BB856}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDSUFormTCP", "DDSUFormTCP\DDSUFormTCP.csproj", "{FF1CD15D-2A23-4D53-8305-D95FC8DC1BF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDSUWebsite", "DDSUWebsite\DDSUWebsite.csproj", "{30C34FD6-0C0A-4A3A-987D-43490CAE65FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DDSU_API", "DDSU_API\DDSU_API.csproj", "{E13F785B-CE75-4D7B-ABCE-5148DB07E392}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,12 +76,6 @@ Global
 		{91D28A5F-B3AF-43A3-B04E-2EA15B9DCDE2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91D28A5F-B3AF-43A3-B04E-2EA15B9DCDE2}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{91D28A5F-B3AF-43A3-B04E-2EA15B9DCDE2}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
-		{485288F5-93E7-49F2-AAD2-390E0D3C1E22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{485288F5-93E7-49F2-AAD2-390E0D3C1E22}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{485288F5-93E7-49F2-AAD2-390E0D3C1E22}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{485288F5-93E7-49F2-AAD2-390E0D3C1E22}.Release|Any CPU.Build.0 = Release|Any CPU
-		{485288F5-93E7-49F2-AAD2-390E0D3C1E22}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{485288F5-93E7-49F2-AAD2-390E0D3C1E22}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
 		{79529396-F819-4845-B4A0-826B43473649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{79529396-F819-4845-B4A0-826B43473649}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79529396-F819-4845-B4A0-826B43473649}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -98,6 +94,18 @@ Global
 		{FF1CD15D-2A23-4D53-8305-D95FC8DC1BF4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FF1CD15D-2A23-4D53-8305-D95FC8DC1BF4}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
 		{FF1CD15D-2A23-4D53-8305-D95FC8DC1BF4}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
+		{30C34FD6-0C0A-4A3A-987D-43490CAE65FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30C34FD6-0C0A-4A3A-987D-43490CAE65FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30C34FD6-0C0A-4A3A-987D-43490CAE65FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30C34FD6-0C0A-4A3A-987D-43490CAE65FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30C34FD6-0C0A-4A3A-987D-43490CAE65FF}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{30C34FD6-0C0A-4A3A-987D-43490CAE65FF}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
+		{E13F785B-CE75-4D7B-ABCE-5148DB07E392}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E13F785B-CE75-4D7B-ABCE-5148DB07E392}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E13F785B-CE75-4D7B-ABCE-5148DB07E392}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E13F785B-CE75-4D7B-ABCE-5148DB07E392}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E13F785B-CE75-4D7B-ABCE-5148DB07E392}.SignedRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{E13F785B-CE75-4D7B-ABCE-5148DB07E392}.SignedRelease|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

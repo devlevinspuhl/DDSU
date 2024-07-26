@@ -1,5 +1,6 @@
 using Microsoft.Win32;
 using NLog;
+using System.Net;
 using System.Net.Sockets;
 using System.Timers;
 
@@ -9,6 +10,8 @@ namespace DDSUFormTCP
     {
         private readonly System.Timers.Timer timer1;
         private readonly System.Timers.Timer timer2;
+        private readonly System.Timers.Timer timer3;
+        private readonly System.Timers.Timer timer4;
         private TcpClient? tcpClient;
         private readonly Logger logger;
         private float expCounter;
@@ -18,8 +21,12 @@ namespace DDSUFormTCP
         private readonly RegistryKey regkey;
         private bool impFirstTime;
         private bool expFirstTime;
-        string server = "192.168.1.30";
-        int port = 8080;
+        private bool combFirstTime;
+        string tcpServer = "192.168.1.30";
+        int tcpPort = 8080;
+        string udpServer = "192.168.1.31";
+        int udpPort = 1337;
+        string path = @"TempGraph.csv";
 
         public Form1()
         {
@@ -34,10 +41,41 @@ namespace DDSUFormTCP
             timer2.Interval = 15000;
             timer2.Elapsed += new ElapsedEventHandler(Timer2_Event);
             timer2.Enabled = true;
+            timer3 = new System.Timers.Timer();
+            timer3.Interval = 1000;
+            timer3.Elapsed += new ElapsedEventHandler(Timer3_Event);
+            timer3.Enabled = true;
+
+            timer4 = new System.Timers.Timer();
+            timer4.Interval = 30000;
+            timer4.Elapsed += new ElapsedEventHandler(Timer4_Event);
+            timer4.Enabled = true;
+
             timer1.Enabled = true;
             timer1.Start();
         }
 
+        private void Timer4_Event(object? sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                var date = DateTime.Now;
+                var line = $"{date.ToString("dd/MM/yyyy HH:mm:ss")},{txTempHigh.Text}";
+                AppendTextLine(line);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex);
+            }
+
+        }
+
+        private void Timer3_Event(object? sender, ElapsedEventArgs e)
+        {
+            timer3.Stop();
+            ReadUDP();
+            timer3.Start();
+        }
         private void Timer2_Event(object? sender, ElapsedEventArgs e)
         {
             timer2.Stop();
@@ -55,13 +93,80 @@ namespace DDSUFormTCP
             timer2.Stop();
             timer1.Start();
         }
+        private void ReadUDP()
+        {
+            Invoke(new Action(() =>
+            {
+                try
+                {
+                    var now = DateTime.Now;
+                    //if (now.Hour==0 && now.Minute==0 && now.Second == 0 && now.Millisecond < 1000)
+                    //{
+                    //    expCounter = 0;
+                    //    impCounter = 0;
+                    //}
+                    using (UdpClient client = new UdpClient(udpPort))
+                    {
+                        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(udpServer), udpPort);
+                        client.Send(new byte[] { 241, 0, 0, 164 }, 4, ep);
+                        var data = client.Receive(ref ep);
+                        float setpoint = (data[4] + data[5] * 256) / 10f;
+                        int index = comboBox1.FindStringExact(setpoint.ToString());
+                        if (index != -1 && !combFirstTime)
+                        {
+                            combFirstTime = true;
+                            comboBox1.SelectedIndex = index;
+
+                        }
+                        float tempHigh = (data[7] + data[8] * 256) / 10f;
+                        lbOnOff.Text = data[9] == 0 ? "OFF" : "ON";
+                        float tempLow = (data[11] + data[12] * 256) / 10f;
+                        txSetpoint.Text = setpoint.ToString("n1");
+                        txTempHigh.Text = tempHigh.ToString("n1");
+                        txTempLow.Text = tempLow.ToString("n1");
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    logger.Error(ex);
+                }
+
+            }
+            ));
+        }
+
+        private void AppendTextLine(string line)
+        {
+
+            // This text is added only once to the file.
+            if (!File.Exists(path))
+            {
+                // Create a file to write to.
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine("datetime,highTemp");
+
+                }
+            }
+
+            // This text is always added, making the file longer over time
+            // if it is not deleted.
+            using (StreamWriter sw = File.AppendText(path))
+            {
+                sw.WriteLine(line);
+
+            }
+        }
+
         private void ReadTCP()
         {
             Invoke(new Action(() =>
             {
                 try
                 {
-                    using (tcpClient = new TcpClient(server, port))
+                    using (tcpClient = new TcpClient(tcpServer, tcpPort))
                     {
                         NetworkStream stream = tcpClient.GetStream();
                         var data = new Byte[82];
@@ -193,10 +298,12 @@ namespace DDSUFormTCP
         private void BtResetExpCounter_Click(object sender, EventArgs e)
         {
             expCounter = 0;
+            regkey.SetValue("ExpCounter", expCounter);
         }
         private void button3_Click(object sender, EventArgs e)
         {
             impCounter = 0;
+            regkey.SetValue("ImpCounter", impCounter);
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -212,6 +319,43 @@ namespace DDSUFormTCP
                 impCounter = float.Parse(regkey.GetValue("ImpCounter")?.ToString() ?? "0");
                 expCounter = float.Parse(regkey.GetValue("ExpCounter")?.ToString() ?? "0");
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var spoint = comboBox1.SelectedItem.ToString();
+                var impSetpoint = int.Parse(spoint) * 10;
+                byte high = (byte)(impSetpoint / 256);
+                byte low = (byte)(impSetpoint - high * 256);
+                var imp = new byte[] { 0xF2, 0x00, 0x00, 0x01, low, high, 0x00 };
+                var cks = Checksum(imp);
+                var cmd = new byte[imp.Length + 1];
+                Array.Copy(imp, cmd, imp.Length);
+                cmd[cmd.Length - 1] = cks;
+
+                using (UdpClient client = new UdpClient(udpPort))
+                {
+                    IPEndPoint ep = new IPEndPoint(IPAddress.Parse(udpServer), udpPort);
+                    client.Send(cmd, 8, ep);
+                    var data = client.Receive(ref ep);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
+        private static byte Checksum(byte[] data)
+        {
+            int checksum = 0;
+            for (int i = 0; i < data.Length; i++)
+            {
+                checksum ^= data[i];
+            }
+            return (byte)(checksum ^ 0x55);
         }
     }
 }
