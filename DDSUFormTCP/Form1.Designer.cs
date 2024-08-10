@@ -43,6 +43,9 @@
             label5 = new Label();
             label4 = new Label();
             groupBox1 = new GroupBox();
+            label9 = new Label();
+            TxCresitDebit = new TextBox();
+            btMeterReset = new Button();
             label8 = new Label();
             lbTimeImp = new Label();
             button3 = new Button();
@@ -57,24 +60,9 @@
             label1 = new Label();
             button1 = new Button();
             button2 = new Button();
-            groupBox3 = new GroupBox();
-            lbOnOff = new Label();
-            label13 = new Label();
-            label14 = new Label();
-            txTempLow = new TextBox();
-            label10 = new Label();
-            label9 = new Label();
-            label11 = new Label();
-            label12 = new Label();
-            txSetpoint = new TextBox();
-            txTempHigh = new TextBox();
-            comboBox1 = new ComboBox();
             bindingSource1 = new BindingSource(components);
-            label15 = new Label();
-            button4 = new Button();
             groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
-            groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             SuspendLayout();
             // 
@@ -213,6 +201,9 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(label9);
+            groupBox1.Controls.Add(TxCresitDebit);
+            groupBox1.Controls.Add(btMeterReset);
             groupBox1.Controls.Add(label8);
             groupBox1.Controls.Add(lbTimeImp);
             groupBox1.Controls.Add(button3);
@@ -231,15 +222,44 @@
             groupBox1.Controls.Add(txExpPower);
             groupBox1.Location = new Point(540, 40);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(343, 454);
+            groupBox1.Size = new Size(343, 592);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "Grid - Import / Export";
             // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Location = new Point(101, 250);
+            label9.Name = "label9";
+            label9.Size = new Size(140, 25);
+            label9.TabIndex = 25;
+            label9.Text = "Credi/Debit (Kw)";
+            // 
+            // TxCresitDebit
+            // 
+            TxCresitDebit.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            TxCresitDebit.ForeColor = Color.Green;
+            TxCresitDebit.Location = new Point(101, 280);
+            TxCresitDebit.Name = "TxCresitDebit";
+            TxCresitDebit.Size = new Size(150, 50);
+            TxCresitDebit.TabIndex = 24;
+            TxCresitDebit.TextAlign = HorizontalAlignment.Right;
+            // 
+            // btMeterReset
+            // 
+            btMeterReset.Location = new Point(184, 195);
+            btMeterReset.Name = "btMeterReset";
+            btMeterReset.Size = new Size(67, 34);
+            btMeterReset.TabIndex = 23;
+            btMeterReset.Text = "Reset";
+            btMeterReset.UseVisualStyleBackColor = true;
+            btMeterReset.Click += btMeterReset_Click;
+            // 
             // label8
             // 
             label8.AutoSize = true;
-            label8.Location = new Point(15, 333);
+            label8.Location = new Point(16, 464);
             label8.Name = "label8";
             label8.Size = new Size(92, 25);
             label8.TabIndex = 22;
@@ -248,7 +268,7 @@
             // lbTimeImp
             // 
             lbTimeImp.AutoSize = true;
-            lbTimeImp.Location = new Point(115, 333);
+            lbTimeImp.Location = new Point(116, 464);
             lbTimeImp.Name = "lbTimeImp";
             lbTimeImp.Size = new Size(50, 25);
             lbTimeImp.TabIndex = 21;
@@ -256,7 +276,7 @@
             // 
             // button3
             // 
-            button3.Location = new Point(15, 384);
+            button3.Location = new Point(16, 515);
             button3.Name = "button3";
             button3.Size = new Size(67, 34);
             button3.TabIndex = 20;
@@ -268,7 +288,7 @@
             // 
             label7.AutoSize = true;
             label7.Font = new Font("Segoe UI", 14F);
-            label7.Location = new Point(257, 390);
+            label7.Location = new Point(258, 521);
             label7.Name = "label7";
             label7.Size = new Size(52, 38);
             label7.TabIndex = 19;
@@ -278,7 +298,7 @@
             // 
             label6.AutoSize = true;
             label6.Font = new Font("Segoe UI", 14F);
-            label6.Location = new Point(257, 274);
+            label6.Location = new Point(258, 405);
             label6.Name = "label6";
             label6.Size = new Size(52, 38);
             label6.TabIndex = 18;
@@ -287,7 +307,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(15, 217);
+            label3.Location = new Point(16, 348);
             label3.Name = "label3";
             label3.Size = new Size(92, 25);
             label3.TabIndex = 17;
@@ -297,7 +317,7 @@
             // 
             txImpCounter.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             txImpCounter.ForeColor = Color.Red;
-            txImpCounter.Location = new Point(100, 384);
+            txImpCounter.Location = new Point(101, 515);
             txImpCounter.Name = "txImpCounter";
             txImpCounter.Size = new Size(150, 50);
             txImpCounter.TabIndex = 16;
@@ -305,7 +325,7 @@
             // 
             // BtResetExpCounter
             // 
-            BtResetExpCounter.Location = new Point(15, 268);
+            BtResetExpCounter.Location = new Point(16, 399);
             BtResetExpCounter.Name = "BtResetExpCounter";
             BtResetExpCounter.Size = new Size(67, 34);
             BtResetExpCounter.TabIndex = 15;
@@ -316,7 +336,7 @@
             // lbTimeExp
             // 
             lbTimeExp.AutoSize = true;
-            lbTimeExp.Location = new Point(115, 217);
+            lbTimeExp.Location = new Point(116, 348);
             lbTimeExp.Name = "lbTimeExp";
             lbTimeExp.Size = new Size(50, 25);
             lbTimeExp.TabIndex = 14;
@@ -326,7 +346,7 @@
             // 
             txExpCounter.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             txExpCounter.ForeColor = Color.Green;
-            txExpCounter.Location = new Point(100, 268);
+            txExpCounter.Location = new Point(101, 399);
             txExpCounter.Name = "txExpCounter";
             txExpCounter.Size = new Size(150, 50);
             txExpCounter.TabIndex = 13;
@@ -370,157 +390,11 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
-            // groupBox3
-            // 
-            groupBox3.Controls.Add(button4);
-            groupBox3.Controls.Add(label15);
-            groupBox3.Controls.Add(comboBox1);
-            groupBox3.Controls.Add(lbOnOff);
-            groupBox3.Controls.Add(label13);
-            groupBox3.Controls.Add(label14);
-            groupBox3.Controls.Add(txTempLow);
-            groupBox3.Controls.Add(label10);
-            groupBox3.Controls.Add(label9);
-            groupBox3.Controls.Add(label11);
-            groupBox3.Controls.Add(label12);
-            groupBox3.Controls.Add(txSetpoint);
-            groupBox3.Controls.Add(txTempHigh);
-            groupBox3.Location = new Point(40, 360);
-            groupBox3.Name = "groupBox3";
-            groupBox3.Size = new Size(489, 327);
-            groupBox3.TabIndex = 10;
-            groupBox3.TabStop = false;
-            groupBox3.Text = "Immersion Heater";
-            // 
-            // lbOnOff
-            // 
-            lbOnOff.AutoSize = true;
-            lbOnOff.Font = new Font("Segoe UI", 24F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            lbOnOff.Location = new Point(243, 150);
-            lbOnOff.Name = "lbOnOff";
-            lbOnOff.Size = new Size(110, 65);
-            lbOnOff.TabIndex = 23;
-            lbOnOff.Text = "OFF";
-            lbOnOff.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Location = new Point(15, 228);
-            label13.Name = "label13";
-            label13.Size = new Size(151, 25);
-            label13.TabIndex = 22;
-            label13.Text = "Temperature Low:";
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Font = new Font("Segoe UI", 14F);
-            label14.Location = new Point(171, 270);
-            label14.Name = "label14";
-            label14.Size = new Size(45, 38);
-            label14.TabIndex = 21;
-            label14.Text = "°C";
-            // 
-            // txTempLow
-            // 
-            txTempLow.Font = new Font("Segoe UI", 16F);
-            txTempLow.Location = new Point(15, 258);
-            txTempLow.Name = "txTempLow";
-            txTempLow.Size = new Size(150, 50);
-            txTempLow.TabIndex = 20;
-            txTempLow.TextAlign = HorizontalAlignment.Right;
-            // 
-            // label10
-            // 
-            label10.AutoSize = true;
-            label10.Location = new Point(15, 135);
-            label10.Name = "label10";
-            label10.Size = new Size(157, 25);
-            label10.TabIndex = 19;
-            label10.Text = "Temperature High:";
-            // 
-            // label9
-            // 
-            label9.AutoSize = true;
-            label9.Location = new Point(15, 44);
-            label9.Name = "label9";
-            label9.Size = new Size(144, 25);
-            label9.TabIndex = 18;
-            label9.Text = "Current setpoint:";
-            // 
-            // label11
-            // 
-            label11.AutoSize = true;
-            label11.Font = new Font("Segoe UI", 14F);
-            label11.Location = new Point(171, 177);
-            label11.Name = "label11";
-            label11.Size = new Size(45, 38);
-            label11.TabIndex = 7;
-            label11.Text = "°C";
-            // 
-            // label12
-            // 
-            label12.AutoSize = true;
-            label12.Font = new Font("Segoe UI", 14F);
-            label12.Location = new Point(171, 78);
-            label12.Name = "label12";
-            label12.Size = new Size(45, 38);
-            label12.TabIndex = 6;
-            label12.Text = "°C";
-            // 
-            // txSetpoint
-            // 
-            txSetpoint.Font = new Font("Segoe UI", 16F);
-            txSetpoint.Location = new Point(15, 72);
-            txSetpoint.Name = "txSetpoint";
-            txSetpoint.Size = new Size(150, 50);
-            txSetpoint.TabIndex = 0;
-            txSetpoint.TextAlign = HorizontalAlignment.Right;
-            // 
-            // txTempHigh
-            // 
-            txTempHigh.Font = new Font("Segoe UI", 16F);
-            txTempHigh.Location = new Point(15, 165);
-            txTempHigh.Name = "txTempHigh";
-            txTempHigh.Size = new Size(150, 50);
-            txTempHigh.TabIndex = 1;
-            txTempHigh.TextAlign = HorizontalAlignment.Right;
-            // 
-            // comboBox1
-            // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "15", "20", "25", "30", "35", "40", "45", "50", "55", "60", "65", "70" });
-            comboBox1.Location = new Point(243, 72);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(73, 33);
-            comboBox1.TabIndex = 11;
-            // 
-            // label15
-            // 
-            label15.AutoSize = true;
-            label15.Location = new Point(243, 44);
-            label15.Name = "label15";
-            label15.Size = new Size(83, 25);
-            label15.TabIndex = 24;
-            label15.Text = "Setpoint:";
-            // 
-            // button4
-            // 
-            button4.Location = new Point(332, 70);
-            button4.Name = "button4";
-            button4.Size = new Size(112, 34);
-            button4.TabIndex = 25;
-            button4.Text = "Set";
-            button4.UseVisualStyleBackColor = true;
-            button4.Click += button4_Click;
-            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(929, 712);
-            Controls.Add(groupBox3);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(groupBox1);
@@ -533,8 +407,6 @@
             groupBox2.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
-            groupBox3.ResumeLayout(false);
-            groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
             ResumeLayout(false);
         }
@@ -568,20 +440,9 @@
         private Label label6;
         private Label label8;
         private Label lbTimeImp;
-        private GroupBox groupBox3;
-        private Label label10;
-        private Label label9;
-        private Label label11;
-        private Label label12;
-        private TextBox txSetpoint;
-        private TextBox txTempHigh;
-        private Label label13;
-        private Label label14;
-        private TextBox txTempLow;
-        private Label lbOnOff;
-        private ComboBox comboBox1;
         private BindingSource bindingSource1;
-        private Button button4;
-        private Label label15;
+        private Button btMeterReset;
+        private Label label9;
+        private TextBox TxCresitDebit;
     }
 }

@@ -1,17 +1,19 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using NLog;
 using System.Net;
 using System.Net.Sockets;
 using System.Timers;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DDSUFormTCP
 {
     public partial class Form1 : Form
     {
         private readonly System.Timers.Timer timer1;
-        private readonly System.Timers.Timer timer2;
+        //private readonly System.Timers.Timer timer2;
         private readonly System.Timers.Timer timer3;
-        private readonly System.Timers.Timer timer4;
+        //private readonly System.Timers.Timer timer4;
         private TcpClient? tcpClient;
         private readonly Logger logger;
         private float expCounter;
@@ -27,6 +29,12 @@ namespace DDSUFormTCP
         string udpServer = "192.168.1.31";
         int udpPort = 1337;
         string path = @"TempGraph.csv";
+        private bool enableArchive;
+        private int maxMinute;
+        private float expPower, impPower;
+
+        private readonly IConfiguration _configuration;
+        private  MySettings? _settings;
 
         public Form1()
         {
@@ -37,48 +45,49 @@ namespace DDSUFormTCP
             timer1 = new System.Timers.Timer();
             timer1.Interval = 100;
             timer1.Elapsed += new ElapsedEventHandler(Timer1_Event);
-            timer2 = new System.Timers.Timer();
-            timer2.Interval = 15000;
-            timer2.Elapsed += new ElapsedEventHandler(Timer2_Event);
-            timer2.Enabled = true;
-            timer3 = new System.Timers.Timer();
-            timer3.Interval = 1000;
-            timer3.Elapsed += new ElapsedEventHandler(Timer3_Event);
-            timer3.Enabled = true;
+            //timer2 = new System.Timers.Timer();
+            //timer2.Interval = 15000;
+            //timer2.Elapsed += new ElapsedEventHandler(Timer2_Event);
+            //timer2.Enabled = true;
+            enableArchive = true;
+            //timer3 = new System.Timers.Timer();
+            //timer3.Interval = 1000;
+            //timer3.Elapsed += new ElapsedEventHandler(Timer3_Event);
+            //timer3.Enabled = true;
 
-            timer4 = new System.Timers.Timer();
-            timer4.Interval = 30000;
-            timer4.Elapsed += new ElapsedEventHandler(Timer4_Event);
-            timer4.Enabled = true;
+            //timer4 = new System.Timers.Timer();
+            //timer4.Interval = 30000;
+            //timer4.Elapsed += new ElapsedEventHandler(Timer4_Event);
+            //timer4.Enabled = true;
 
             timer1.Enabled = true;
             timer1.Start();
         }
 
-        private void Timer4_Event(object? sender, ElapsedEventArgs e)
-        {
-            try
-            {
-                var date = DateTime.Now;
-                var line = $"{date.ToString("dd/MM/yyyy HH:mm:ss")},{txTempHigh.Text}";
-                AppendTextLine(line);
-            }
-            catch (Exception ex)
-            {
-                logger.Error(ex);
-            }
+        //private void Timer4_Event(object? sender, ElapsedEventArgs e)
+        //{
+        //    try
+        //    {
+        //        var date = DateTime.Now;
+        //        var line = $"{date.ToString("dd/MM/yyyy HH:mm:ss")},{txTempHigh.Text}";
+        //        AppendTextLine(line);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        logger.Error(ex);
+        //    }
 
-        }
+        //}
 
-        private void Timer3_Event(object? sender, ElapsedEventArgs e)
-        {
-            timer3.Stop();
-            ReadUDP();
-            timer3.Start();
-        }
+        //private void Timer3_Event(object? sender, ElapsedEventArgs e)
+        //{
+        //    timer3.Stop();
+        //    ReadUDP();
+        //    timer3.Start();
+        //}
         private void Timer2_Event(object? sender, ElapsedEventArgs e)
         {
-            timer2.Stop();
+            //timer2.Stop();
             timer1.Stop();
             tcpClient?.Close();
             tcpClient?.Dispose();
@@ -88,54 +97,68 @@ namespace DDSUFormTCP
         private void Timer1_Event(object? sender, ElapsedEventArgs e)
         {
             timer1.Stop();
-            timer2.Start();
+            //timer2.Start();
             ReadTCP();
-            timer2.Stop();
+            //timer2.Stop();
             timer1.Start();
         }
-        private void ReadUDP()
-        {
-            Invoke(new Action(() =>
-            {
-                try
-                {
-                    var now = DateTime.Now;
-                    //if (now.Hour==0 && now.Minute==0 && now.Second == 0 && now.Millisecond < 1000)
-                    //{
-                    //    expCounter = 0;
-                    //    impCounter = 0;
-                    //}
-                    using (UdpClient client = new UdpClient(udpPort))
-                    {
-                        IPEndPoint ep = new IPEndPoint(IPAddress.Parse(udpServer), udpPort);
-                        client.Send(new byte[] { 241, 0, 0, 164 }, 4, ep);
-                        var data = client.Receive(ref ep);
-                        float setpoint = (data[4] + data[5] * 256) / 10f;
-                        int index = comboBox1.FindStringExact(setpoint.ToString());
-                        if (index != -1 && !combFirstTime)
-                        {
-                            combFirstTime = true;
-                            comboBox1.SelectedIndex = index;
+        //private void ReadUDP()
+        //{
+        //    Invoke(new Action(() =>
+        //    {
+        //        try
+        //        {
+        //            var now = DateTime.Now;
+        //            var sec = now.Second;
+        //            var min = now.Minute;
+        //            if (sec > 30 && enableArchive)
+        //            {
+        //                maxMinute = min;
+        //                var line = $"{now.ToString("dd/MM/yyyy HH:mm:ss")},{txTempHigh.Text}";
+        //                //AppendTextLine(line);
+        //                logger.Info(line);
+        //                enableArchive = false;
+        //            }
+        //            if (min > maxMinute)
+        //            {
+        //                enableArchive = true;
+        //            }
+        //            //if (now.Hour==0 && now.Minute==0 && now.Second == 0 && now.Millisecond < 1000)
+        //            //{
+        //            //    expCounter = 0;
+        //            //    impCounter = 0;
+        //            //}
+        //            using (UdpClient client = new UdpClient(udpPort))
+        //            {
+        //                IPEndPoint ep = new IPEndPoint(IPAddress.Parse(udpServer), udpPort);
+        //                client.Send(new byte[] { 241, 0, 0, 164 }, 4, ep);
+        //                var data = client.Receive(ref ep);
+        //                float setpoint = (data[4] + data[5] * 256) / 10f;
+        //                int index = comboBox1.FindStringExact(setpoint.ToString());
+        //                if (index != -1 && !combFirstTime)
+        //                {
+        //                    combFirstTime = true;
+        //                    comboBox1.SelectedIndex = index;
 
-                        }
-                        float tempHigh = (data[7] + data[8] * 256) / 10f;
-                        lbOnOff.Text = data[9] == 0 ? "OFF" : "ON";
-                        float tempLow = (data[11] + data[12] * 256) / 10f;
-                        txSetpoint.Text = setpoint.ToString("n1");
-                        txTempHigh.Text = tempHigh.ToString("n1");
-                        txTempLow.Text = tempLow.ToString("n1");
-                    }
+        //                }
+        //                float tempHigh = (data[7] + data[8] * 256) / 10f;
+        //                lbOnOff.Text = data[9] == 0 ? "OFF" : "ON";
+        //                float tempLow = (data[11] + data[12] * 256) / 10f;
+        //                txSetpoint.Text = setpoint.ToString("n1");
+        //                txTempHigh.Text = tempHigh.ToString("n1");
+        //                txTempLow.Text = tempLow.ToString("n1");
+        //            }
 
 
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex);
-                }
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            logger.Error(ex);
+        //        }
 
-            }
-            ));
-        }
+        //    }
+        //    ));
+        //}
 
         private void AppendTextLine(string line)
         {
@@ -201,43 +224,58 @@ namespace DDSUFormTCP
         }
         private void RightPanel(byte[] bigendian)
         {
-            var expPower = UshortToFloat(
+            var regImpPower = float.Parse(regkey.GetValue("ImpPower")?.ToString() ?? "0");
+            var regExpPower = float.Parse(regkey.GetValue("ExpPower")?.ToString() ?? "0");
+            var timeImport = DateTime.Parse(regkey.GetValue("TimeImport")?.ToString() ?? DateTime.Now.ToString());
+            var timeExport = DateTime.Parse(regkey.GetValue("TimeExport")?.ToString() ?? DateTime.Now.ToString());
+            expPower = UshortToFloat(
                 BitConverter.ToUInt16(bigendian, 40),
                 BitConverter.ToUInt16(bigendian, 42)
                 );
-            txExpPower.Text = expPower.ToString("n2");
-            var impPower = UshortToFloat(
+            txExpPower.Text = (expPower - regExpPower).ToString("n2");
+            impPower = UshortToFloat(
                 BitConverter.ToUInt16(bigendian, 20),
                 BitConverter.ToUInt16(bigendian, 22)
                 );
-            txImpPower.Text = impPower.ToString("n2");
+            txImpPower.Text = (impPower - regImpPower).ToString("n2");
+            var crediDebitValue = _settings.CreditDebitCalc(decimal.Parse(txImpPower.Text), decimal.Parse(txExpPower.Text));
+
+            TxCresitDebit.Text = crediDebitValue.ToString("n2");
+            TxCresitDebit.ForeColor = crediDebitValue < 0 ? Color.Red : Color.Blue;
             if (expCounter == 0)
             {
                 expCounter = expPower;
-                timeExpStarted = DateTime.Now;
+                //timeExpStarted = DateTime.Now;
             }
             if (impCounter == 0)
             {
                 impCounter = impPower;
-                timeImpStarted = DateTime.Now;
+                //timeImpStarted = DateTime.Now;
             }
+            
+            
             var diff = expPower - expCounter;
+            
             if (diff > 0 && expFirstTime)
             {
-                timeExpStarted = DateTime.Now;
+                timeExport = DateTime.Now;
+                regkey.SetValue("TimeExport", DateTime.Now);
+                expFirstTime = false;
             }
+            //expFirstTime = diff == 0;
             var diff2 = impPower - impCounter;
+            
             if (diff2 > 0 && impFirstTime)
             {
+                timeImport = DateTime.Now;
+                regkey.SetValue("TimeImport", timeImport);
                 impFirstTime = false;
-                timeImpStarted = DateTime.Now;
             }
-            expFirstTime = diff == 0;
-            impFirstTime = diff2 == 0;
+            //impFirstTime = diff2 == 0;
             txExpCounter.Text = diff.ToString("n2");
             txImpCounter.Text = diff2.ToString("n2");
-            lbTimeExp.Text = timeExpStarted.ToString("HH:mm");
-            lbTimeImp.Text = timeImpStarted.ToString("HH:mm");
+            lbTimeExp.Text = timeExport.ToString("HH:mm");
+            lbTimeImp.Text = timeImport.ToString("HH:mm");
         }
         private void LeftPanel(byte[] bigendian)
         {
@@ -299,11 +337,15 @@ namespace DDSUFormTCP
         {
             expCounter = 0;
             regkey.SetValue("ExpCounter", expCounter);
+            regkey.SetValue("TimeExport", DateTime.Now);
+            expFirstTime = true;
         }
         private void button3_Click(object sender, EventArgs e)
         {
             impCounter = 0;
             regkey.SetValue("ImpCounter", impCounter);
+            regkey.SetValue("TimeImport", DateTime.Now);
+            impFirstTime = true;
         }
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -320,34 +362,40 @@ namespace DDSUFormTCP
                 expCounter = float.Parse(regkey.GetValue("ExpCounter")?.ToString() ?? "0");
             }
         }
-
-        private void button4_Click(object sender, EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
-            try
-            {
-                var spoint = comboBox1.SelectedItem.ToString();
-                var impSetpoint = int.Parse(spoint) * 10;
-                byte high = (byte)(impSetpoint / 256);
-                byte low = (byte)(impSetpoint - high * 256);
-                var imp = new byte[] { 0xF2, 0x00, 0x00, 0x01, low, high, 0x00 };
-                var cks = Checksum(imp);
-                var cmd = new byte[imp.Length + 1];
-                Array.Copy(imp, cmd, imp.Length);
-                cmd[cmd.Length - 1] = cks;
-
-                using (UdpClient client = new UdpClient(udpPort))
-                {
-                    IPEndPoint ep = new IPEndPoint(IPAddress.Parse(udpServer), udpPort);
-                    client.Send(cmd, 8, ep);
-                    var data = client.Receive(ref ep);
-                }
-
-            }
-            catch (Exception ex)
-            {
-
-            }
+            base.OnLoad(e);
+            _settings = Program.Configuration.GetSection("MySettings").Get<MySettings>();
+            
         }
+
+        //private void button4_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        var spoint = comboBox1.SelectedItem.ToString();
+        //        var impSetpoint = int.Parse(spoint) * 10;
+        //        byte high = (byte)(impSetpoint / 256);
+        //        byte low = (byte)(impSetpoint - high * 256);
+        //        var imp = new byte[] { 0xF2, 0x00, 0x00, 0x01, low, high, 0x00 };
+        //        var cks = Checksum(imp);
+        //        var cmd = new byte[imp.Length + 1];
+        //        Array.Copy(imp, cmd, imp.Length);
+        //        cmd[cmd.Length - 1] = cks;
+
+        //        using (UdpClient client = new UdpClient(udpPort))
+        //        {
+        //            IPEndPoint ep = new IPEndPoint(IPAddress.Parse(udpServer), udpPort);
+        //            client.Send(cmd, 8, ep);
+        //            var data = client.Receive(ref ep);
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+
+        //    }
+        //}
         private static byte Checksum(byte[] data)
         {
             int checksum = 0;
@@ -356,6 +404,12 @@ namespace DDSUFormTCP
                 checksum ^= data[i];
             }
             return (byte)(checksum ^ 0x55);
+        }
+
+        private void btMeterReset_Click(object sender, EventArgs e)
+        {
+            regkey.SetValue("ImpPower", impPower);
+            regkey.SetValue("ExpPower", expPower);
         }
     }
 }
