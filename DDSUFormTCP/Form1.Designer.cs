@@ -43,6 +43,7 @@
             label5 = new Label();
             label4 = new Label();
             groupBox1 = new GroupBox();
+            button4 = new Button();
             label9 = new Label();
             TxCresitDebit = new TextBox();
             btMeterReset = new Button();
@@ -61,6 +62,7 @@
             button1 = new Button();
             button2 = new Button();
             bindingSource1 = new BindingSource(components);
+            button5 = new Button();
             groupBox2.SuspendLayout();
             groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
@@ -201,6 +203,8 @@
             // 
             // groupBox1
             // 
+            groupBox1.Controls.Add(button5);
+            groupBox1.Controls.Add(button4);
             groupBox1.Controls.Add(label9);
             groupBox1.Controls.Add(TxCresitDebit);
             groupBox1.Controls.Add(btMeterReset);
@@ -226,6 +230,16 @@
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "Grid - Import / Export";
+            // 
+            // button4
+            // 
+            button4.Location = new Point(184, 348);
+            button4.Name = "button4";
+            button4.Size = new Size(67, 34);
+            button4.TabIndex = 16;
+            button4.Text = "Reset";
+            button4.UseVisualStyleBackColor = true;
+            button4.Click += button4_Click;
             // 
             // label9
             // 
@@ -390,6 +404,16 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // button5
+            // 
+            button5.Location = new Point(184, 464);
+            button5.Name = "button5";
+            button5.Size = new Size(67, 34);
+            button5.TabIndex = 26;
+            button5.Text = "Reset";
+            button5.UseVisualStyleBackColor = true;
+            button5.Click += button5_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -444,5 +468,7 @@
         private Button btMeterReset;
         private Label label9;
         private TextBox TxCresitDebit;
+        private Button button4;
+        private Button button5;
     }
 }

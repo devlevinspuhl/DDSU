@@ -34,7 +34,7 @@ namespace DDSUFormTCP
         private float expPower, impPower;
 
         private readonly IConfiguration _configuration;
-        private  MySettings? _settings;
+        private MySettings? _settings;
 
         public Form1()
         {
@@ -252,26 +252,34 @@ namespace DDSUFormTCP
                 impCounter = impPower;
                 //timeImpStarted = DateTime.Now;
             }
-            
-            
+
+
+
             var diff = expPower - expCounter;
-            
-            if (diff > 0 && expFirstTime)
+            if (diff == 0)
+            {
+                expFirstTime = false;
+
+            }
+            if (diff > 0 && !expFirstTime)
             {
                 timeExport = DateTime.Now;
                 regkey.SetValue("TimeExport", DateTime.Now);
-                expFirstTime = false;
+                expFirstTime = true;
             }
-            //expFirstTime = diff == 0;
             var diff2 = impPower - impCounter;
-            
-            if (diff2 > 0 && impFirstTime)
+            if (diff2 == 0)
+            {
+                impFirstTime = false;
+            }
+
+            if (diff2 > 0 && !impFirstTime)
             {
                 timeImport = DateTime.Now;
                 regkey.SetValue("TimeImport", timeImport);
-                impFirstTime = false;
+                impFirstTime = true;
             }
-            //impFirstTime = diff2 == 0;
+
             txExpCounter.Text = diff.ToString("n2");
             txImpCounter.Text = diff2.ToString("n2");
             lbTimeExp.Text = timeExport.ToString("HH:mm");
@@ -366,7 +374,7 @@ namespace DDSUFormTCP
         {
             base.OnLoad(e);
             _settings = Program.Configuration.GetSection("MySettings").Get<MySettings>();
-            
+
         }
 
         //private void button4_Click(object sender, EventArgs e)
@@ -410,6 +418,16 @@ namespace DDSUFormTCP
         {
             regkey.SetValue("ImpPower", impPower);
             regkey.SetValue("ExpPower", expPower);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            regkey.SetValue("TimeExport", DateTime.Now);
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            regkey.SetValue("TimeImport", DateTime.Now);
         }
     }
 }
