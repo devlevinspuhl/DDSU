@@ -416,8 +416,8 @@ namespace DDSUFormTCP
 
         private void btMeterReset_Click(object sender, EventArgs e)
         {
-            regkey.SetValue("ImpPower", impPower);
-            regkey.SetValue("ExpPower", expPower);
+            //regkey.SetValue("ImpPower", impPower);
+            //regkey.SetValue("ExpPower", expPower);
         }
 
         private void button4_Click(object sender, EventArgs e)
