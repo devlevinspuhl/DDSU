@@ -5,8 +5,8 @@ using System.IO.Ports;
 using System.Net.Sockets;
 
 //using (SerialPort serialPort = new SerialPort("COM9", 9600, Parity.None, 8, StopBits.One))
-String server = "192.168.1.30";
-Int32 port = 8080;
+String server = "192.168.1.10";
+Int32 port = 8899;
 // Prefer a using declaration to ensure the instance is Disposed later.
 
 while (true)

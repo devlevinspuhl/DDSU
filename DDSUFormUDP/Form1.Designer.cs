@@ -1,4 +1,4 @@
-﻿namespace DDSUFormTCP
+﻿namespace DDSUFormUDP
 {
     partial class Form1
     {
@@ -511,5 +511,6 @@
         private GroupBox groupBox3;
         private Label label13;
         private TextBox txBattPerc;
+
     }
 }

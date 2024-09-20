@@ -1,12 +1,10 @@
-using Microsoft.Extensions.Configuration;
 using Microsoft.Win32;
 using NLog;
-using System.Net;
+using Microsoft.Extensions.Configuration;
 using System.Net.Sockets;
 using System.Timers;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
-namespace DDSUFormTCP
+namespace DDSUFormUDP
 {
     public partial class Form1 : Form
     {
@@ -360,4 +358,3 @@ namespace DDSUFormTCP
         }
     }
 }
-
